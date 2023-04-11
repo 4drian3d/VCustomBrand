@@ -1,1 +1,1 @@
-rootProject.name = "PluginName"
+rootProject.name = "VCustomBrand"

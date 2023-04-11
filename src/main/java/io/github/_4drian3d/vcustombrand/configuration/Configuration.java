@@ -1,40 +1,53 @@
 package io.github._4drian3d.vcustombrand.configuration;
 
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
-public interface Configuration {
-    String customBrand();
+@ConfigSerializable
+public final class Configuration {
+    private static final ObjectMapper<Configuration> MAPPER;
 
-    static Configuration loadConfig(final Path path) throws IOException {
-        final Path configPath = loadFiles(path);
-        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                .setPath(configPath)
-                .build();
-
-        final CommentedConfigurationNode loaded = loader.load();
-
-        final String customBrand = loaded.getNode("custom-brand")
-                .getString();
-
-        return () -> customBrand;
+    static {
+        try {
+            MAPPER = ObjectMapper.forClass(Configuration.class);
+        } catch (ObjectMappingException e) {
+            throw new ExceptionInInitializerError(e);
+        }
     }
 
-    private static Path loadFiles(final Path path) throws IOException {
-        if (Files.notExists(path)) {
-            Files.createDirectory(path);
-        }
-        final Path configPath = path.resolve("config.conf");
-        if (Files.notExists(configPath)) {
-            try (final var stream = Configuration.class.getClassLoader().getResourceAsStream("config.conf")) {
-                Files.copy(Objects.requireNonNull(stream), configPath);
-            }
-        }
-        return configPath;
+    public static Configuration loadFrom(ConfigurationNode node) throws ObjectMappingException {
+        return MAPPER.bindToNew().populate(node);
+    }
+
+
+    @Setting(comment = """
+            Sets the brand to display
+            Supports MiniPlaceholders""",
+            value = "custom-brand")
+    private String customBrand = "<rainbow>MyServer <green><player_name>";
+
+    @Setting(comment = "Unit of time in which the brand will be updated", value = "time-unit")
+    private TimeUnit timeUnit = TimeUnit.SECONDS;
+
+    @Setting(comment = """
+            Amount of time according to the unit of time
+            in which the brand will be updated""")
+    private int value = 2;
+
+    public String customBrand() {
+        return this.customBrand;
+    }
+
+    public TimeUnit timeUnit() {
+        return this.timeUnit;
+    }
+
+    public int timeValue() {
+        return this.value;
     }
 }

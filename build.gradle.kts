@@ -6,11 +6,14 @@ plugins {
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://maven.elytrium.net/repo/")
 }
 
 dependencies {
-    compileOnly(libs.velocity)
-    annotationProcessor(libs.velocity)
+    compileOnly(libs.velocity.api)
+    annotationProcessor(libs.velocity.api)
+    compileOnly(libs.velocity.proxy)
+    compileOnly(libs.netty)
     compileOnly(libs.miniplaceholders)
 }
 

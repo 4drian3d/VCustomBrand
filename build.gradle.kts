@@ -35,8 +35,10 @@ tasks {
         velocityVersion(libs.versions.velocity.get())
     }
     shadowJar {
-        relocate("io.github._4drian3d.velocityhexlogger", "io.github.4drian3d.vcustombrand.velocityhexlogger")
-        relocate("net.kyori.adventure.text.logger.slf4j", "io.github.4drian3d.vcustombrand.component.logger")
+        archiveBaseName.set(rootProject.name)
+        archiveClassifier.set("")
+        relocate("io.github._4drian3d.velocityhexlogger", "io.github._4drian3d.vcustombrand.velocityhexlogger")
+        relocate("net.kyori.adventure.text.logger.slf4j", "io.github._4drian3d.vcustombrand.component.logger")
         minimize()
     }
 }

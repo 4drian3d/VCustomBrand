@@ -5,6 +5,12 @@
 Customize the brand to display to players on your Velocity network
 
 ## Installation
-- Download VCustomBrand from Modrinth
+- Download VCustomBrand from [Modrinth](https://modrinth.com/plugin/vcustombrand)
 - Drag and drop on your Velocity plugins folder
 - Start the server
+
+[![](https://raw.githubusercontent.com/Prospector/badges/master/modrinth-badge-72h-padded.png)](https://modrinth.com/plugin/vcustombrand)
+
+## Command
+### `/vcustombrand reload`
+Permission: `vcustombrand.command`

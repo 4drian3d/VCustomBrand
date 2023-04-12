@@ -9,11 +9,15 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import io.github._4drian3d.vcustombrand.command.BrandCommand;
 import io.github._4drian3d.vcustombrand.configuration.ConfigurationContainer;
-import org.slf4j.Logger;
+import io.github._4drian3d.velocityhexlogger.HexLogger;
+import net.kyori.adventure.text.Component;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 @Plugin(
         id = "vcustombrand",
@@ -24,13 +28,16 @@ import java.util.concurrent.CompletableFuture;
         dependencies = { @Dependency(id = "miniplaceholders", optional = true) }
 )
 public final class VCustomBrand {
-    @Inject
-    private Logger logger;
+    public static final Component PRESENTATION = miniMessage().deserialize(
+            "<gradient:#E8C547:#C27114>VCustomBrand</gradient> <gray>|</gray> by <aqua>4drian3d"
+    );
     @Inject
     private Injector injector;
     @Inject
     @DataDirectory
     private Path path;
+    @Inject
+    private HexLogger logger;
     private BrandManager brandManager;
     private ConfigurationContainer configuration;
 
@@ -45,6 +52,9 @@ public final class VCustomBrand {
 
         brandManager = injector.getInstance(BrandManager.class);
         brandManager.start();
+
+        injector.getInstance(BrandCommand.class).register();
+        logger.info(PRESENTATION);
     }
 
     @Subscribe

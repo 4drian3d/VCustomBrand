@@ -23,6 +23,7 @@ import java.util.concurrent.ScheduledFuture;
 
 public final class BrandManager {
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
+    private static final String RESET = LegacyComponentSerializer.SECTION_CHAR + "r";
 
     @Inject
     private ProxyServer proxyServer;
@@ -53,7 +54,7 @@ public final class BrandManager {
                             ? MiniPlaceholders.getAudienceGlobalPlaceholders(player)
                             : TagResolver.empty();
                     final Component brandParsed = MiniMessage.miniMessage().deserialize(brand, resolver);
-                    final String legacyBrand = LEGACY_SERIALIZER.serialize(brandParsed);
+                    final String legacyBrand = LEGACY_SERIALIZER.serialize(brandParsed) + RESET;
 
                     final ProtocolVersion protocolVersion = player.getProtocolVersion();
                     final ByteBuf buf = Unpooled.buffer();

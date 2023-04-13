@@ -14,3 +14,7 @@ Customize the brand to display to players on your Velocity network
 ## Command
 ### `/vcustombrand reload`
 Permission: `vcustombrand.command`
+
+# Tutorial
+
+[![](https://img.youtube.com/vi/2Wm7sHLmpsc/maxresdefault.jpg)](https://www.youtube.com/watch?v=2Wm7sHLmpsc)

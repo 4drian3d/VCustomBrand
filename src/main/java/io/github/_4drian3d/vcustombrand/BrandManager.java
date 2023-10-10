@@ -5,7 +5,9 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.plugin.PluginManager;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import com.velocitypowered.proxy.protocol.ProtocolUtils;
+import com.velocitypowered.proxy.protocol.packet.PluginMessage;
 import io.github._4drian3d.vcustombrand.configuration.ConfigurationContainer;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.netty.buffer.ByteBuf;
@@ -65,11 +67,10 @@ public final class BrandManager {
                         buf.writeCharSequence(legacyBrand, StandardCharsets.UTF_8);
                     }
 
-                    final byte[] brandBytes = buf.array();
-
-                    if (!player.sendPluginMessage(Constants.MODERN_CHANNEL, brandBytes)) {
-                        player.sendPluginMessage(Constants.LEGACY_CHANNEL, brandBytes);
-                    }
+                    ((ConnectedPlayer) player).getConnection().write(
+                            new PluginMessage(protocolVersion.compareTo(ProtocolVersion.MINECRAFT_1_13) >= 0
+                                    ? Constants.MODERN_CHANNEL.getId() : Constants.LEGACY_CHANNEL.getId(), buf)
+                    );
                 }), 0, configuration.get().timeValue(), configuration.get().timeUnit());
     }
 

@@ -6,11 +6,10 @@ metadata.format.version = "1.1"
 velocity = "3.2.0-SNAPSHOT"
 
 # Gradle Plugins
-blossom = "1.3.1"
+blossom = "2.0.1"
 shadow = "7.1.2"
 runvelocity = "2.0.1"
 
-libby = "43d25ade72"
 bstats = "3.0.0"
 
 miniplaceholders = "2.0.0"
@@ -34,3 +33,4 @@ velocityhexlogger = "io.github.4drian3d:velocityhexlogger:1.0.2"
 blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 runvelocity = { id = "xyz.jpenilla.run-velocity", version.ref = "runvelocity" }
+idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.7" }

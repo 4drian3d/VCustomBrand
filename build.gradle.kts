@@ -1,6 +1,7 @@
 plugins {
     java
     alias(libs.plugins.runvelocity)
+    alias(libs.plugins.idea.ext)
     alias(libs.plugins.blossom)
     alias(libs.plugins.shadow)
 }
@@ -43,9 +44,14 @@ tasks {
     }
 }
 
-blossom {
-    replaceTokenIn("src/main/java/io/github/_4drian3d/vcustombrand/Constants.java")
-    replaceToken("{version}", project.version)
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("version", project.version.toString())
+            }
+        }
+    }
 }
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

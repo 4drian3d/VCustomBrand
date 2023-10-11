@@ -10,7 +10,7 @@ blossom = "2.0.1"
 shadow = "7.1.2"
 runvelocity = "2.0.1"
 
-bstats = "3.0.0"
+bstats = "3.0.2"
 
 miniplaceholders = "2.0.0"
 netty = "4.1.100.Final"

@@ -11,8 +11,8 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import io.github._4drian3d.vcustombrand.command.BrandCommand;
 import io.github._4drian3d.vcustombrand.configuration.ConfigurationContainer;
-import io.github._4drian3d.velocityhexlogger.HexLogger;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
 import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
@@ -37,7 +37,7 @@ public final class VCustomBrand {
     @DataDirectory
     private Path path;
     @Inject
-    private HexLogger logger;
+    private ComponentLogger logger;
     private BrandManager brandManager;
     private ConfigurationContainer configuration;
 

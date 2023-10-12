@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.runvelocity)
     alias(libs.plugins.idea.ext)
     alias(libs.plugins.blossom)
-    alias(libs.plugins.shadow)
 }
 
 repositories {
@@ -17,13 +16,9 @@ dependencies {
     compileOnly(libs.velocity.proxy)
     compileOnly(libs.netty)
     compileOnly(libs.miniplaceholders)
-    implementation(libs.velocityhexlogger)
 }
 
 tasks {
-    build {
-        dependsOn(shadowJar)
-    }
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
@@ -34,13 +29,6 @@ tasks {
     }
     runVelocity {
         velocityVersion(libs.versions.velocity.get())
-    }
-    shadowJar {
-        archiveBaseName.set(rootProject.name)
-        archiveClassifier.set("")
-        relocate("io.github._4drian3d.velocityhexlogger", "io.github._4drian3d.vcustombrand.velocityhexlogger")
-        relocate("net.kyori.adventure.text.logger.slf4j", "io.github._4drian3d.vcustombrand.component.logger")
-        minimize()
     }
 }
 

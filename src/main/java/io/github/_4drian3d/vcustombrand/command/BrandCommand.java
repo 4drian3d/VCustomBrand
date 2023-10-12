@@ -8,16 +8,16 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
-import io.github._4drian3d.velocityhexlogger.HexLogger;
 import net.kyori.adventure.audience.Audience;
 
 import io.github._4drian3d.vcustombrand.VCustomBrand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
 public final class BrandCommand {
     @Inject
-    private HexLogger logger;
+    private ComponentLogger logger;
     @Inject
     private CommandManager commandManager;
     @Inject
@@ -33,7 +33,6 @@ public final class BrandCommand {
                     } else {
                         audience.sendMessage(VCustomBrand.PRESENTATION);
                     }
-
                     return Command.SINGLE_SUCCESS;
                 })
                 .then(LiteralArgumentBuilder.<CommandSource>literal("reload")

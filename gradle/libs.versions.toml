@@ -26,7 +26,6 @@ bstats = { module = "org.bstats:bstats-velocity", version.ref = "bstats" }
 netty = { module = "io.netty:netty-all", version.ref = "netty" }
 
 miniplaceholders = { group = "io.github.miniplaceholders", name = "miniplaceholders-api", version.ref = "miniplaceholders" }
-velocityhexlogger = "io.github.4drian3d:velocityhexlogger:1.0.2"
 
 [plugins]
 

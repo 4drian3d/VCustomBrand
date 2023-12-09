@@ -16,6 +16,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 
 public final class BrandCommand {
+    private static final Component SUCCESSFULLY_RELOADED = Component.text("Configuration Reloaded", NamedTextColor.GREEN);
+    private static final Component UNSUCCESSFULLY_RELOADED = Component.text("An error occurred reloading configuration, check console", NamedTextColor.RED);
     @Inject
     private ComponentLogger logger;
     @Inject
@@ -27,7 +29,7 @@ public final class BrandCommand {
         final var command = LiteralArgumentBuilder.<CommandSource>literal("vcustombrand")
                 .requires(ctx -> ctx.hasPermission("vcustombrand.command"))
                 .executes(context -> {
-                    Audience audience = context.getSource();
+                    final Audience audience = context.getSource();
                     if (audience instanceof ConsoleCommandSource) {
                         logger.info(VCustomBrand.PRESENTATION);
                     } else {
@@ -38,15 +40,9 @@ public final class BrandCommand {
                 .then(LiteralArgumentBuilder.<CommandSource>literal("reload")
                         .executes(ctx -> {
                             final Audience audience = ctx.getSource();
-                            plugin.reload().thenAccept(result -> {
-                               if (result) {
-                                   audience.sendMessage(Component.text(
-                                           "Configuration Reloaded", NamedTextColor.GREEN));
-                               } else {
-                                   audience.sendMessage(Component.text(
-                                           "An error occurred reloading configuration, check console", NamedTextColor.RED));
-                               }
-                            });
+                            plugin.reload()
+                                    .thenAccept(result -> audience.sendMessage(result
+                                            ? SUCCESSFULLY_RELOADED : UNSUCCESSFULLY_RELOADED));
                             return Command.SINGLE_SUCCESS;
                         })
                 );

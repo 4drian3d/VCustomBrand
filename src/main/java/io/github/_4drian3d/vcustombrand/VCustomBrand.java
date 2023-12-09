@@ -47,7 +47,7 @@ public final class VCustomBrand {
         if (configuration == null) return;
 
         injector = injector.createChildInjector(
-                binder -> binder.bind(ConfigurationContainer.class).toInstance(configuration)
+            binder -> binder.bind(ConfigurationContainer.class).toInstance(configuration)
         );
 
         brandManager = injector.getInstance(BrandManager.class);

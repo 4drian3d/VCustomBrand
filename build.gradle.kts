@@ -7,7 +7,7 @@ plugins {
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://mvn.exceptionflug.de/repository/exceptionflug-public/")
+    maven("https://maven.elytrium.net/repo/")
 }
 
 dependencies {
@@ -29,6 +29,9 @@ tasks {
     }
     runVelocity {
         velocityVersion(libs.versions.velocity.get())
+        downloadPlugins {
+            url("https://cdn.modrinth.com/data/HQyibRsN/versions/pxgKwgNJ/MiniPlaceholders-Velocity-2.2.3.jar")
+        }
     }
 }
 

@@ -5,8 +5,10 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.plugin.PluginManager;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import com.velocitypowered.proxy.protocol.ProtocolUtils;
+import com.velocitypowered.proxy.protocol.StateRegistry;
 import com.velocitypowered.proxy.protocol.packet.PluginMessage;
 import io.github._4drian3d.vcustombrand.configuration.ConfigurationContainer;
 import io.github.miniplaceholders.api.MiniPlaceholders;
@@ -51,6 +53,10 @@ public final class BrandManager {
         this.actualTask = EXECUTOR.scheduleAtFixedRate(() -> proxyServer.getAllPlayers()
                 .parallelStream()
                 .forEach(player -> {
+                    final MinecraftConnection connection = ((ConnectedPlayer) player).getConnection();
+                    if (connection.getState() != StateRegistry.PLAY) {
+                        return;
+                    }
                     final String brand = configuration.get().customBrand();
                     final TagResolver resolver = miniPlaceholders
                             ? MiniPlaceholders.getAudienceGlobalPlaceholders(player)
@@ -66,8 +72,7 @@ public final class BrandManager {
                     } else {
                         buf.writeCharSequence(legacyBrand, StandardCharsets.UTF_8);
                     }
-
-                    ((ConnectedPlayer) player).getConnection().write(
+                    connection.write(
                             new PluginMessage(protocolVersion.compareTo(ProtocolVersion.MINECRAFT_1_13) >= 0
                                     ? Constants.MODERN_CHANNEL.getId() : Constants.LEGACY_CHANNEL.getId(), buf)
                     );

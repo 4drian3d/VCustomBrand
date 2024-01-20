@@ -13,7 +13,7 @@ runvelocity = "2.2.2"
 bstats = "3.0.2"
 
 miniplaceholders = "2.2.3"
-netty = "4.1.103.Final"
+netty = "4.1.106.Final"
 
 [libraries]
 

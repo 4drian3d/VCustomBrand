@@ -7,7 +7,7 @@ plugins {
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://maven.elytrium.net/repo/")
+    maven("https://repo.william278.net/velocity/")
 }
 
 dependencies {

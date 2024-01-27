@@ -9,7 +9,7 @@ import com.velocitypowered.proxy.connection.MinecraftConnection;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import com.velocitypowered.proxy.protocol.ProtocolUtils;
 import com.velocitypowered.proxy.protocol.StateRegistry;
-import com.velocitypowered.proxy.protocol.packet.PluginMessage;
+import com.velocitypowered.proxy.protocol.packet.PluginMessagePacket;
 import io.github._4drian3d.vcustombrand.configuration.ConfigurationContainer;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.netty.buffer.ByteBuf;
@@ -57,7 +57,7 @@ public final class BrandManager {
                     if (connection.getState() != StateRegistry.PLAY) {
                         return;
                     }
-                    final String brand = configuration.get().customBrand();
+                    final String brand = configuration.get().customBrand;
                     final TagResolver resolver = miniPlaceholders
                             ? MiniPlaceholders.getAudienceGlobalPlaceholders(player)
                             : TagResolver.empty();
@@ -73,10 +73,10 @@ public final class BrandManager {
                         buf.writeCharSequence(legacyBrand, StandardCharsets.UTF_8);
                     }
                     connection.write(
-                            new PluginMessage(protocolVersion.compareTo(ProtocolVersion.MINECRAFT_1_13) >= 0
+                            new PluginMessagePacket(protocolVersion.compareTo(ProtocolVersion.MINECRAFT_1_13) >= 0
                                     ? Constants.MODERN_CHANNEL.getId() : Constants.LEGACY_CHANNEL.getId(), buf)
                     );
-                }), 0, configuration.get().timeValue(), configuration.get().timeUnit());
+                }), 0, configuration.get().value, configuration.get().timeUnit);
     }
 
     public void reload() {

@@ -1,10 +1,11 @@
 package io.github._4drian3d.vcustombrand.configuration;
 
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMapper;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import ninja.leaping.configurate.objectmapping.Setting;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.ObjectMapper;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,40 +15,29 @@ public final class Configuration {
 
     static {
         try {
-            MAPPER = ObjectMapper.forClass(Configuration.class);
-        } catch (ObjectMappingException e) {
+            MAPPER = ObjectMapper.factory().get(Configuration.class);
+        } catch (SerializationException e) {
             throw new ExceptionInInitializerError(e);
         }
     }
 
-    public static Configuration loadFrom(ConfigurationNode node) throws ObjectMappingException {
-        return MAPPER.bindToNew().populate(node);
+    public static Configuration loadFrom(ConfigurationNode node) throws SerializationException {
+        return MAPPER.load(node);
     }
 
 
-    @Setting(comment = """
+    @Comment("""
             Sets the brand to display
-            Supports MiniPlaceholders""",
-            value = "custom-brand")
-    private String customBrand = "<rainbow>MyServer <green><player_name>";
+            Supports MiniPlaceholders""")
+    @Setting(value = "custom-brand")
+    public String customBrand = "<rainbow>MyServer <green><player_name>";
 
-    @Setting(comment = "Unit of time in which the brand will be updated", value = "time-unit")
-    private TimeUnit timeUnit = TimeUnit.SECONDS;
+    @Comment("Unit of time in which the brand will be updated")
+    @Setting(value = "time-unit")
+    public TimeUnit timeUnit = TimeUnit.SECONDS;
 
-    @Setting(comment = """
+    @Comment("""
             Amount of time according to the unit of time
             in which the brand will be updated""")
-    private int value = 2;
-
-    public String customBrand() {
-        return this.customBrand;
-    }
-
-    public TimeUnit timeUnit() {
-        return this.timeUnit;
-    }
-
-    public int timeValue() {
-        return this.value;
-    }
+    public int value = 2;
 }

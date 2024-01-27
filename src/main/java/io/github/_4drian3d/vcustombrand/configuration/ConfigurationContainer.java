@@ -1,10 +1,8 @@
 package io.github._4drian3d.vcustombrand.configuration;
 
-import com.google.common.reflect.TypeToken;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,9 +10,7 @@ import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
-@SuppressWarnings("UnstableApiUsage")
 public class ConfigurationContainer {
-    private static final TypeToken<Configuration> token = TypeToken.of(Configuration.class);
     private final AtomicReference<Configuration> config;
     private final HoconConfigurationLoader loader;
     private final Logger logger;
@@ -33,12 +29,11 @@ public class ConfigurationContainer {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 final CommentedConfigurationNode node = loader.load();
-                Configuration newConfig = Configuration.loadFrom(node);
-                node.setValue(token, newConfig);
+                final Configuration newConfig = Configuration.loadFrom(node);
                 loader.save(node);
                 config.set(newConfig);
                 return true;
-            } catch (IOException | ObjectMappingException exception) {
+            } catch (IOException exception) {
                 logger.error("Could not reload configuration file", exception);
                 return false;
             }
@@ -56,19 +51,19 @@ public class ConfigurationContainer {
         try {
             final Path configPath = loadFiles(path);
             final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                    .setDefaultOptions(options ->
-                            options.setHeader("VCustomBrand | by 4drian3d")
-                                    .withShouldCopyDefaults(true)
+                    .defaultOptions(options ->
+                            options.header("VCustomBrand | by 4drian3d")
+                                    .shouldCopyDefaults(true)
                     )
-                    .setPath(configPath)
+                    .path(configPath)
                     .build();
 
             final CommentedConfigurationNode node = loader.load();
             final Configuration configuration = Configuration.loadFrom(node);
-            node.setValue(token, configuration);
+            node.set(configuration);
             loader.save(node);
             return new ConfigurationContainer(configuration, loader, logger);
-        } catch (IOException | ObjectMappingException exception){
+        } catch (IOException exception) {
             logger.error("Could not load configuration file", exception);
             return null;
         }

@@ -2,14 +2,11 @@ package io.github._4drian3d.vcustombrand;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
+import com.velocitypowered.api.network.ProtocolState;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.plugin.PluginManager;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.proxy.connection.MinecraftConnection;
-import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import com.velocitypowered.proxy.protocol.ProtocolUtils;
-import com.velocitypowered.proxy.protocol.StateRegistry;
-import com.velocitypowered.proxy.protocol.packet.PluginMessagePacket;
 import io.github._4drian3d.vcustombrand.configuration.ConfigurationContainer;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.netty.buffer.ByteBuf;
@@ -53,8 +50,7 @@ public final class BrandManager {
         this.actualTask = EXECUTOR.scheduleAtFixedRate(() -> proxyServer.getAllPlayers()
                 .parallelStream()
                 .forEach(player -> {
-                    final MinecraftConnection connection = ((ConnectedPlayer) player).getConnection();
-                    if (connection.getState() != StateRegistry.PLAY) {
+                    if (player.getProtocolState() != ProtocolState.PLAY) {
                         return;
                     }
                     final String brand = configuration.get().customBrand;
@@ -72,10 +68,8 @@ public final class BrandManager {
                     } else {
                         buf.writeCharSequence(legacyBrand, StandardCharsets.UTF_8);
                     }
-                    connection.write(
-                            new PluginMessagePacket(protocolVersion.compareTo(ProtocolVersion.MINECRAFT_1_13) >= 0
-                                    ? Constants.MODERN_CHANNEL.getId() : Constants.LEGACY_CHANNEL.getId(), buf)
-                    );
+                    player.sendPluginMessage(protocolVersion.noLessThan(ProtocolVersion.MINECRAFT_1_13)
+                            ? Constants.MODERN_CHANNEL : Constants.LEGACY_CHANNEL, buf.array());
                 }), 0, configuration.get().value, configuration.get().timeUnit);
     }
 

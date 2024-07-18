@@ -68,6 +68,7 @@ public final class BrandManager {
                     } else {
                         buf.writeCharSequence(legacyBrand, StandardCharsets.UTF_8);
                     }
+                    // This cannot be converted to the new Velocity API because it has to be sent to older version clients
                     player.sendPluginMessage(protocolVersion.noLessThan(ProtocolVersion.MINECRAFT_1_13)
                             ? Constants.MODERN_CHANNEL : Constants.LEGACY_CHANNEL, buf.array());
                 }), 0, configuration.get().value, configuration.get().timeUnit);

@@ -3,7 +3,7 @@ metadata.format.version = "1.1"
 [versions]
 
 # CompileOnly dependencies
-velocity = "3.3.0-SNAPSHOT"
+velocity = "3.4.0-SNAPSHOT"
 
 # Gradle Plugins
 blossom = "2.1.0"
@@ -12,7 +12,7 @@ runvelocity = "2.3.1"
 
 bstats = "3.1.0"
 
-miniplaceholders = "2.2.3"
+miniplaceholders = "3.0.1"
 netty = "4.1.114.Final"
 
 [libraries]

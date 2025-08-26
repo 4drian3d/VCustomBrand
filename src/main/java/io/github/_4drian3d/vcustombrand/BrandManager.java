@@ -6,7 +6,10 @@ import com.velocitypowered.api.network.ProtocolState;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.plugin.PluginManager;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
+import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import com.velocitypowered.proxy.protocol.ProtocolUtils;
+import com.velocitypowered.proxy.protocol.packet.PluginMessagePacket;
 import io.github._4drian3d.vcustombrand.configuration.ConfigurationContainer;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.netty.buffer.ByteBuf;
@@ -49,28 +52,27 @@ public final class BrandManager {
         final boolean miniPlaceholders = pluginManager.isLoaded("miniplaceholders");
         this.actualTask = EXECUTOR.scheduleAtFixedRate(() -> proxyServer.getAllPlayers()
                 .parallelStream()
+                .filter(p -> p.getProtocolState() == ProtocolState.PLAY)
+                .map(ConnectedPlayer.class::cast)
                 .forEach(player -> {
-                    if (player.getProtocolState() != ProtocolState.PLAY) {
-                        return;
-                    }
                     final String brand = configuration.get().customBrand;
                     final TagResolver resolver = miniPlaceholders
-                            ? MiniPlaceholders.getAudienceGlobalPlaceholders(player)
+                            ? MiniPlaceholders.audienceGlobalPlaceholders()
                             : TagResolver.empty();
-                    final Component brandParsed = MiniMessage.miniMessage().deserialize(brand, resolver);
+                    final Component brandParsed = MiniMessage.miniMessage().deserialize(brand, player, resolver);
                     final String legacyBrand = LEGACY_SERIALIZER.serialize(brandParsed) + RESET;
 
                     final ProtocolVersion protocolVersion = player.getProtocolVersion();
+                    final ChannelIdentifier channel = protocolVersion.noLessThan(ProtocolVersion.MINECRAFT_1_13)
+                                                        ? Constants.MODERN_CHANNEL : Constants.LEGACY_CHANNEL;
                     final ByteBuf buf = Unpooled.buffer();
-
                     if (protocolVersion.compareTo(ProtocolVersion.MINECRAFT_1_8) >= 0) {
                         ProtocolUtils.writeString(buf, legacyBrand);
                     } else {
                         buf.writeCharSequence(legacyBrand, StandardCharsets.UTF_8);
                     }
-                    // This cannot be converted to the new Velocity API because it has to be sent to older version clients
-                    player.sendPluginMessage(protocolVersion.noLessThan(ProtocolVersion.MINECRAFT_1_13)
-                            ? Constants.MODERN_CHANNEL : Constants.LEGACY_CHANNEL, buf.array());
+                    final var packet = new PluginMessagePacket(channel.getId(), buf);
+                    player.getConnection().write(packet);
                 }), 0, configuration.get().value, configuration.get().timeUnit);
     }
 

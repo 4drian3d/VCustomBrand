@@ -7,7 +7,7 @@ plugins {
 
 repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://repo.william278.net/velocity/")
+    maven("https://repo.opencollab.dev/maven-snapshots")
 }
 
 dependencies {
@@ -30,7 +30,7 @@ tasks {
     runVelocity {
         velocityVersion(libs.versions.velocity.get())
         downloadPlugins {
-            url("https://cdn.modrinth.com/data/HQyibRsN/versions/pxgKwgNJ/MiniPlaceholders-Velocity-2.2.3.jar")
+            modrinth("miniplaceholders", "As2iw2Rw")
         }
     }
 }
